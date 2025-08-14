@@ -214,10 +214,10 @@ export default function DashboardPage() {
                   </div>
                 )}
 
-                <Button
+                <Button 
                   type="submit"
                   disabled={loading || !username.trim()}
-                  className="w-full bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex text-white w-32 bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   {loading ? "Updating..." : "Update Username"}
                 </Button>

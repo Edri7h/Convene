@@ -8,14 +8,14 @@ import InitUser from "./InitUser";
 import { saveUserToDb } from "@/app/actions/saveUser";
 
 export default async function  Navbar() {
-  // await saveUserToDb();
   await saveUserToDb();
+  // await saveUserToDb();
   return (
     <nav className="w-full border-b px-4 py-3 flex items-center justify-between">
       {/* <InitUser/> */}
       {/* Logo / App name */}
       <Link href="/" className="text-xl font-semibold">
-        BookWithMe
+        Convene
       </Link>
 
       {/* Right side */}

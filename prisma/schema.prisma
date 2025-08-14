@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  // output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -53,8 +53,8 @@ model Booking {
   name           String   // Name of the person booking the event
   email          String   // Email of the person booking the event
   additionalInfo String?  // Optional additional information from the person booking
-  startTime      String
-  endTime        String
+  startTime      DateTime 
+  endTime        DateTime 
   meetLink       String  // Google Meet link for the booking
   googleEventId  String
   createdAt      DateTime @default(now())
@@ -80,6 +80,7 @@ model DayAvailability {
   day            DayOfWeek
   startTime      DateTime
   endTime        DateTime
+  isAvailable     Boolean @default(false)
   
   availability Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
 }

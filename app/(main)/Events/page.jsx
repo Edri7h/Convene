@@ -13,9 +13,11 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 // import { Switch } from "@/components/ui/switch";
 
+
+
 const eventSchema = z.object({
   title: z.string().min(1, "Event title is required"),
-  description: z.string().optional(),
+  description: z.string().max(100,"Description is too long").min(1,"Description is required"),
   isPrivate: z.boolean(),
 });
 
@@ -41,11 +43,16 @@ export default function CreateEventComponent() {
 
   const result = eventSchema.safeParse(formData);
   if (!result.success) {
-    const newErrors = {};
-    result.error.errors.forEach((error) => {
-      newErrors[error.path[0]] = error.message;
-    });
-    setErrors(newErrors);
+    const {fieldErrors} =result.error.flatten();
+    const formattedErrors={};
+    for(let key in fieldErrors){
+      if(fieldErrors[key]){
+          formattedErrors[key]=fieldErrors[key][0];
+      }
+    }
+    setErrors(formattedErrors)
+    
+    // setErrors(newErrors);
     return;
   }
 
@@ -75,7 +82,7 @@ export default function CreateEventComponent() {
 
 
   return (
-    <div className="max-w-lg mx-auto p-3">
+    <div className="max-w-lg mx-auto  p-3">
       <Card className="border-0 shadow-lg bg-white">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
@@ -123,10 +130,10 @@ export default function CreateEventComponent() {
                 rows={2}
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
-                className="resize-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-500 text-sm"
+                className={`focus-visible:ring-0 focus-visible:ring-offset-0  ${errors.description ? "border-red-300 focus-visible:border-red-500" :"focus-visible:border-blue-500  " }resize-none  text-sm`}
               />
             </div>
-
+             { errors.description && (<p className=" text-xs text-red-600">{errors.description}</p>)}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
                 Event Visibility
