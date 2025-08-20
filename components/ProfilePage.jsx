@@ -8,25 +8,25 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarDays, Clock, User, Calendar,   Send } from "lucide-react";
 import Link from "next/link";
 // import { getUserProfile } from "../actions/user";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 // import { setEvents } from "@/Redux/userSlice";
 import EventCard from "@/components/EventCard";
-import {  setUserDetails } from '@/Redux/userSlice';
+// import {  setUserDetails } from '@/Redux/userSlice';
 
 const ProfilePage = ({user}) => {
-  const dispatch=useDispatch();
+  // const dispatch=useDispatch();
 
    const { events, _count } = user;
    console.log(user)
-   const userData={
-    username:user.username,
-    name:user.name,
-    imageUrl:user.imageUrl,
-    email:user.email,
+  //  const userData={
+  //   username:user.username,
+  //   name:user.name,
+  //   imageUrl:user.imageUrl,
+  //   email:user.email,
 
-   }
+  //  }
    
-   dispatch(setUserDetails(userData));
+  //  dispatch(setUserDetails(userData));
 
   return (
    <div className="min-h-screen bg-gray-50">

@@ -84,7 +84,7 @@ export default function DashboardPage() {
 };
 
 
-  const userLink = username ? `${baseUrl}/${username}` : "";
+  const userLink = username ? `${baseUrl}/users/${username}` : "";
 
   const handleCopy = async () => {
     if (!userLink) return;

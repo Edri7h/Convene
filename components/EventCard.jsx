@@ -6,6 +6,7 @@ import Link from "next/link";
 
 
 export default function EventCard({ event, username }) {
+  
   return (
     <Card className="bg-white border border-gray-200">
       <CardHeader className="pb-4">
@@ -45,7 +46,7 @@ export default function EventCard({ event, username }) {
             asChild 
             className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm"
           >
-            <Link href={`/${username}/${event.id}`} className="flex items-center gap-2">
+            <Link href={`${username}/${event.id}`} className="flex items-center gap-2">
               Book Now
               <ArrowRight className="w-4 h-4" />
             </Link>

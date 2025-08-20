@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Clock, Users } from "lucide-react";
+import { PlusCircle, Clock, Users, Loader2 } from "lucide-react";
 import { BarLoader } from "react-spinners";
 
 export default function MeetingsPage() {
@@ -29,9 +29,12 @@ export default function MeetingsPage() {
 
   if (isLoading) {
     return (
+      <>
       <div className="fixed top-0 left-0 w-full z-50">
         <BarLoader color="#3b82f6" height={3} width="100%" />
       </div>
+      
+      </>
     );
     
   }
