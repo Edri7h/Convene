@@ -11,7 +11,7 @@ export  async function DELETE(req,{params}){
         const {bookingId}= await params;
     const {userId}= getAuth(req);
 
-    if(!userId){
+    if(!userId){ 
         return NextResponse.json({message:"unauthorized",success:false},{status:401});
 
     }

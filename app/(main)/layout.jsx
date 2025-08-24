@@ -28,17 +28,17 @@ function BottomNavigation() {
       icon: LayoutDashboard 
     },
     { 
-      href: "/meetings", 
+      href: "/Meetings", 
       label: "Meetings", 
       icon: CalendarDays 
     },
     { 
-      href: "/events", 
+      href: "/Events", 
       label: "Events", 
       icon: Users 
     },
     { 
-      href: "/availability", 
+      href: "/Availability", 
       label: "Availability", 
       icon: Clock 
     },
