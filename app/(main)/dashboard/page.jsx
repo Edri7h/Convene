@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy, Check, ExternalLink } from "lucide-react";
+import { useRouter } from "next/router";
 // import Image from "next/image";
 
 // Username validation
@@ -20,7 +21,8 @@ const schema = z
   .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed");
 
 export default function DashboardPage() {
-  const { user, isLoaded } = useUser();
+  const router=useRouter();
+  const { user, isLoaded,isSignedIn } = useUser();
   const { updateUser } = useClerk();
 
   const [username, setUsername] = useState("");
@@ -36,6 +38,9 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    if(isLoaded && !isSignedIn ){
+      router.push("/sign-in")
+    }
     if (isLoaded && user?.username) {
       setUsername(user.username);
     }
