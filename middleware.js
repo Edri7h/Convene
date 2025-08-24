@@ -11,11 +11,8 @@
 //   ],
 // };
 
-
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-// Define the routes that should be protected.
-// A user must be signed in to visit these routes.
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/Meetings(.*)',
@@ -23,12 +20,10 @@ const isProtectedRoute = createRouteMatcher([
   '/Events(.*)',
 ]);
 
-export default clerkMiddleware((auth, req) => {
-  // Check if the route is a protected route.
+export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
-    // If it is, protect it. This will automatically redirect
-    // unauthenticated users to your sign-in page.
-    auth().protect();
+    // This is the correct syntax: auth.protect() without parentheses on auth
+   await auth.protect();
   }
 });
 
@@ -40,6 +35,3 @@ export const config = {
     '/(api|trpc)(.*)',
   ],
 };
-
-
-
