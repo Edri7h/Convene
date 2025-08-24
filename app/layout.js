@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Zylo",
-  description: "",
+  title: "Convene",
+  description: "Book and manage meetings effortlessely",
 };
 
 export default function RootLayout({ children }) {

@@ -32,7 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { BarLoader, BeatLoader, CircleLoader } from "react-spinners";
+import { BarLoader,  CircleLoader } from "react-spinners";
 import Link from "next/link";
 import { toast } from "sonner";
 
