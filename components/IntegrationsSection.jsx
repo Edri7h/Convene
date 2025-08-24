@@ -4,12 +4,9 @@ import { Briefcase, ArrowRight } from 'lucide-react'; // Example using lucide-re
 // A list of your app's key integrations.
 // Make sure to add the corresponding SVG logo files to your `public/icons/` directory.
 const integrations = [
-  { name: 'Google Calendar', path: '/icons/google-calendar.svg' },
-  { name: 'Google Meet', path: '/icons/google-meet.svg' },
-  { name: 'Outlook Calendar', path: '/icons/outlook.svg' },
-  { name: 'Microsoft Teams', path: '/icons/teams.svg' },
-  { name: 'Zoom', path: '/icons/zoom.svg' },
-  { name: 'Slack', path: '/icons/slack.svg' },
+  { name: 'Google Calendar', path: 'icons/google-calendar.png' },
+  { name: 'Google Meet', path: 'icons/google-meet.png' },
+ 
 ];
 
 const IntegrationsSection = () => {
@@ -48,21 +45,16 @@ const IntegrationsSection = () => {
             {/* Background decorative grid */}
             <div className="absolute h-full w-full -translate-x-4 -translate-y-4">
               <div className="grid h-full w-full grid-cols-2 grid-rows-3 gap-4">
-                <div className="h-full w-full rounded-lg border border-dashed border-gray-200 dark:border-gray-700"></div>
-                <div className="h-full w-full rounded-lg border border-dashed border-gray-200 dark:border-gray-700"></div>
-                <div className="h-full w-full rounded-lg border border-dashed border-gray-200 dark:border-gray-700"></div>
-                <div className="h-full w-full rounded-lg border border-dashed border-gray-200 dark:border-gray-700"></div>
-                <div className="h-full w-full rounded-lg border border-dashed border-gray-200 dark:border-gray-700"></div>
-                <div className="h-full w-full rounded-lg border border-dashed border-gray-200 dark:border-gray-700"></div>
+                
               </div>
             </div>
 
             {/* Foreground icon grid */}
-            <div className="relative grid grid-cols-2 grid-rows-3 gap-4">
+            <div className="relative grid grid-cols-2 grid-rows-1 gap-5">
               {integrations.map((app) => (
                 <div
                   key={app.name}
-                  className="flex h-24 w-24 items-center justify-center rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10"
+                  className="flex h-24 border-dashed border-gray-400 w-24 items-center justify-center rounded-lg bg-white shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800 dark:ring-white/10"
                 >
                   <img
                     src={app.path}
@@ -72,6 +64,7 @@ const IntegrationsSection = () => {
                 </div>
               ))}
             </div>
+
           </div>
         </div>
       </div>

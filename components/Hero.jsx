@@ -43,7 +43,7 @@ const imageVariants = {
 
 export default function Hero() {
   return (
-    <section className="w-full bg-[#0B0B0F] text-white">
+    <section className="w-full dark:bg-gray-900 text-white">
       <motion.div
         className="min-h-screen container mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-4 py-24"
         initial="hidden"
