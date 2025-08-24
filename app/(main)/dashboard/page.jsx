@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy, Check, ExternalLink } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 // import Image from "next/image";
 
 // Username validation
@@ -44,7 +44,7 @@ export default function DashboardPage() {
     if (isLoaded && user?.username) {
       setUsername(user.username);
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user,isSignedIn]);
 
   if (!isLoaded) {
     return (

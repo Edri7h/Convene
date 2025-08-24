@@ -5,6 +5,8 @@ import { defaultAvailability } from "@/lib/defaultAvailability";
 import { Clock, Calendar, Settings, Save, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 const formatTime = (isoString) => {
   if (!isoString) return "09:00"; // ✅ Fallback for undefined
@@ -30,8 +32,13 @@ export default function SetAvailabilityPage() {
       toast.error(error.response?.data?.message || "something went wrong");
     }
   };
-
+  const {isLoaded ,isSignedIn }=useUser();
+const router =useRouter();
   useEffect(() => {
+    if(isLoaded && !isSignedIn){
+      router.push("/sign-in")
+
+    }
     getAvailability();
   }, []);
 
