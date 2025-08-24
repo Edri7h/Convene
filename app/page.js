@@ -1,6 +1,7 @@
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
+import IntegrationsSection from "@/components/IntegrationsSection";
 
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
    <>
    <Hero/>
    <Features/>
+   <IntegrationsSection/>
    <Footer/>
    
    </>
