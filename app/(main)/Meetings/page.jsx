@@ -44,7 +44,7 @@ export default function MeetingsPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">My Meetings</h1>
         <Button asChild>
-          <Link href="/events">
+          <Link href="/Events">
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Event
           </Link>
