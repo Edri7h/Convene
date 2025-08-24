@@ -1,19 +1,26 @@
-// "use client";
+"use client";
 
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-// import { saveUserToDb } from "@/lib/saveUserToDb";
-import InitUser from "./InitUser";
+import { useEffect } from "react";
 import { saveUserToDb } from "@/app/actions/saveUser";
 
-export default async function  Navbar() {
-  await saveUserToDb();
-  // await saveUserToDb();
+export default function Navbar() {
+  useEffect(() => {
+    // Save user to DB only once after mount
+    (async () => {
+      try {
+        await saveUserToDb();
+      } catch (err) {
+        console.error("Failed to save user:", err);
+      }
+    })();
+  }, []);
+
   return (
     <nav className="w-full border-b px-4 py-3 flex items-center justify-between">
-      {/* <InitUser/> */}
-      {/* Logo / App name */}
+      {/* Logo */}
       <Link href="/" className="text-xl font-semibold">
         Convene
       </Link>
@@ -30,12 +37,13 @@ export default async function  Navbar() {
         </SignedOut>
 
         <SignedIn>
-            <Button className="w-24" size="lg">Create</Button>
-          <UserButton  appearance={{
-    elements: {
-      userButtonAvatarBox: "w-100 h-30", // Increase width/height
-    },
-  }} />
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "w-100 h-30",
+              },
+            }}
+          />
         </SignedIn>
       </div>
     </nav>
