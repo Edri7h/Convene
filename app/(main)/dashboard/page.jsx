@@ -160,8 +160,8 @@ export default function DashboardPage() {
                   </label>
                   <div className="flex rounded-md shadow-sm border border-gray-300 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
                     <span className="w-60 inline-flex items-center px-3 bg-gray-50 border-r border-gray-300 text-gray-500 text-sm">
-                      {baseUrl}/
-                    </span>
+                     <p> {baseUrl}/</p>
+                    </span> 
                     <Input
                       id="username"
                       type="text"
