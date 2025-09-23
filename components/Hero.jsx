@@ -112,7 +112,7 @@ export default function Hero() {
           <div className="relative w-full max-w-md p-6 bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl shadow-2xl shadow-indigo-500/10">
             <div className="flex items-center mb-4">
               <img
-                src="https://i.pravatar.cc/40?u=a042581f4e29026704d" // Placeholder avatar
+                src="https://i.pravatar.cc/40?u=a042581f4e29026704h" // Placeholder avatar
                 alt="Avatar"
                 className="w-10 h-10 rounded-full mr-4 border-2 border-gray-600"
               />
