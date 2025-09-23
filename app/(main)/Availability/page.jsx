@@ -46,7 +46,7 @@ export default function SetAvailabilityPage() {
       )
     );
   };
-
+// handle time change
   const handleTimeChange = (day, field, value) => {
     // ✅ Add safety check
     if (!value) return;
@@ -80,7 +80,7 @@ export default function SetAvailabilityPage() {
       )
     );
   };
-
+// calling save API
   const handleSave = async () => {
     setIsLoading(true);
     setSaveStatus(null);

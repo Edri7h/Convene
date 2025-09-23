@@ -22,8 +22,8 @@ const schema = z
 
 export default function DashboardPage() {
   // const router=useRouter();
-  const { user, isLoaded,isSignedIn } = useUser();
-  const { updateUser } = useClerk();
+  const { user, isLoaded } = useUser();
+ 
 
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
@@ -43,6 +43,10 @@ export default function DashboardPage() {
       setUsername(user.username);
     }
   }, [isLoaded, user]);
+
+
+
+
 
   if (!isLoaded) {
     return (
@@ -86,9 +90,9 @@ export default function DashboardPage() {
   }
 };
 
-
+  //setting the user's personal profile link in state->
   const userLink = username ? `${baseUrl}/users/${username}` : "";
-
+  
   const handleCopy = async () => {
     if (!userLink) return;
     try {
@@ -160,7 +164,7 @@ export default function DashboardPage() {
                   </label>
                   <div className="flex rounded-md shadow-sm border border-gray-300 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
                     <span className="w-96 inline-flex items-center px-3 bg-gray-50 border-r border-gray-300 text-gray-500 text-sm">
-                     <p className=""> https://convene-xiyn.vercel.app/</p>
+                     <p className=""> https://convene-x.vercel.app/</p>
                     </span> 
                     <Input
                       id="username"

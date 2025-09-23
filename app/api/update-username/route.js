@@ -41,7 +41,7 @@ export async function POST(req) {
     updateUser(userId, {
       username: trimmed,
     });
-
+   
     return new Response(
       JSON.stringify({ success: true }),
       {
