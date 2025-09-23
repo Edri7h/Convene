@@ -117,7 +117,7 @@ export default function Hero() {
                 className="w-10 h-10 rounded-full mr-4 border-2 border-gray-600"
               />
               <div>
-                <h3 className="font-semibold text-gray-100">Alexandre Monet</h3>
+                <h3 className="font-semibold text-gray-100">Alex Monet</h3>
                 <p className="text-sm text-gray-400">Design Lead at Quantum</p>
               </div>
             </div>
