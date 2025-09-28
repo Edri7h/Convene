@@ -48,7 +48,7 @@ model Booking {
   id             String  @id @default(uuid())
   eventId        String
   event          Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  userId         String 
+  userId         String  
   user           User    @relation("UserBookings", fields: [userId], references: [id])
   name           String   // Name of the person booking the event
   email          String   // Email of the person booking the event
@@ -76,13 +76,13 @@ model Availability {
 
 model DayAvailability {
   id             String @id @default(uuid())
-  availabilityId String
   day            DayOfWeek
+  availabilityId String
+  availability   Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
   startTime      DateTime
   endTime        DateTime
-  isAvailable     Boolean @default(false)
+  isAvailable    Boolean @default(false)
   
-  availability Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
 }
 
 enum DayOfWeek {

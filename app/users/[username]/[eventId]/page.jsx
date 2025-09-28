@@ -234,7 +234,7 @@ const handleBooking = async () => {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="mb-8">
-            <Link href={`/${username}`} className="inline-flex items-center text-slate-700 font-medium mb-4"><ArrowLeft className="w-4 h-4 mr-2" />Back to Profile</Link>
+            <Link href={`users/${username}`} className="inline-flex items-center text-slate-700 font-medium mb-4"><ArrowLeft className="w-4 h-4 mr-2" />Back to Profile</Link>
             <h1 className="text-3xl font-bold text-slate-900">{event.title}</h1>
           </div>
           <div className="grid lg:grid-cols-3 gap-8">
