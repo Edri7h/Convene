@@ -21,12 +21,13 @@ export const saveUserToDb = async () => {
     }
 
     const name = `${user.firstName} ${user.lastName}`;
+    const newUsername= name.split(" ").join("_") + user.id.slice(-4);
+     const client = await clerkClient();
 
-    (await clerkClient()).users.
-    updateUser(user.id, {
-      username: name.split(" ").join("_") + user.id.slice(-4),
+    client.users.updateUser(user.id,{
+      username:newUsername
     });
-
+    
     const newUser = await prisma.user.create({
       data: {
         clerkUserId: user.id,

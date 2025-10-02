@@ -54,11 +54,11 @@ export async function GET(req, { params }) {
                 }
             },
             orderBy: {
-                createdAt: 'asc' // Optional: Good practice to sort the results
+                createdAt: 'asc' 
             }
         });
 
-        // 2. Use a standard 'data' key for the payload for consistency
+      
         return NextResponse.json({
             success: true,
             message: "Bookings fetched successfully",
