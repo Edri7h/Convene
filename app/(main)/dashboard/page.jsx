@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy, Check, ExternalLink } from "lucide-react";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 // import Image from "next/image";
 
 // Username validation
@@ -38,13 +38,10 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    
     if (isLoaded && user?.username) {
-      setUsername(user.username);
+      setUsername(user?.username);
     }
   }, [isLoaded, user]);
-
-
 
 
 
@@ -55,6 +52,8 @@ export default function DashboardPage() {
       </div>
     );
   }
+
+
 
   const handleSubmit = async (e) => {
   e.preventDefault();

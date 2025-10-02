@@ -36,11 +36,13 @@ export async function POST(req) {
       where: { clerkUserId: userId },
       data: { username: trimmed },
     });
+    const client= await clerkClient();
+   await  client.users.updateUser(userId,{username:trimmed})
 
-    (await clerkClient()).users.
-    updateUser(userId, {
-      username: trimmed,
-    });
+    // (await clerkClient()).users.
+    // updateUser(userId, {
+    //   username: trimmed,
+    // });
    
     return new Response(
       JSON.stringify({ success: true }),
