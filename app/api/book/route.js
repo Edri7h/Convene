@@ -39,12 +39,15 @@ export async function POST(req) {
 
      const startTime = new Date(`${date}T${time}:00`);
     const endTime = new Date(startTime.getTime() + event.duration * 60000);
+    console.log("this works")
 
     const client = await clerkClient();
     const oauthResponse = await client.users.getUserOauthAccessToken(
       event.user.clerkUserId,
       'oauth_google'
     );
+
+    console.log("this works2")
     
     const accessToken = oauthResponse.data[0]?.token;
 
@@ -63,7 +66,7 @@ export async function POST(req) {
     const googleEventResponse = await calendar.events.insert({
       calendarId: 'primary',
       conferenceDataVersion: 1,
-      sendUpdates: 'all', // <-- THIS IS THE FIX
+      sendUpdates: 'all', 
       requestBody: {
         summary: `${event.title} with ${event.user.name}`,
         description: additionalInfo || `This meeting was booked through Convene.`,
