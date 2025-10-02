@@ -224,7 +224,7 @@ const handleBooking = async () => {
         <BarLoader color="#3b82f6" height={3} width="100%" />
       </div></div>;
   if (!event) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><AlertCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Event Not Found</h2></div>;
-  if (bookingSuccess) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2><p className="text-slate-600 mb-6">A confirmation email is on its way.</p><Button asChild><Link href={`/${username}`}>Book Another</Link></Button></div>;
+  if (bookingSuccess) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2><p className="text-slate-600 mb-6">A confirmation email is on its way.</p><Button asChild><Link href={`/users/${username}`}>Book Another</Link></Button></div>;
 
   const timeSlots = generateTimeSlots(selectedDate);
   
