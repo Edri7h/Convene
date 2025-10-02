@@ -22,10 +22,11 @@ export const saveUserToDb = async () => {
 
     const name = `${user.firstName} ${user.lastName}`;
     const newUsername= name.split(" ").join("_") + user.id.slice(-4);
+    const usernameLower=newUsername.toLowerCase();
      const client = await clerkClient();
 
-    client.users.updateUser(user.id,{
-      username:newUsername
+    await client.users.updateUser(user.id,{
+      username:usernameLower
     });
     
     const newUser = await prisma.user.create({
@@ -34,7 +35,7 @@ export const saveUserToDb = async () => {
         name,
         imageUrl: user.imageUrl,
         email: user.emailAddresses[0].emailAddress,
-        username: name.split(" ").join("_") + user.id.slice(-4),
+        username:usernameLower,
       },
     });
 
