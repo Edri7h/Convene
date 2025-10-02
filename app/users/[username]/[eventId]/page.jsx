@@ -51,9 +51,9 @@ export default function BookingPage() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [bookingForm, setBookingForm] = useState(
     {
-     name: '',
-     email: '', 
-     additionalInfo: '' 
+      name: '',
+      email: '',
+      additionalInfo: ''
     }
   );
   const [formErrors, setFormErrors] = useState({});
@@ -173,7 +173,7 @@ export default function BookingPage() {
       //  setTimeout(()=>{ setFormErrors({})},100000)
       return;
     }
-   
+
     setFormErrors({});
 
     // --- DEBUGGING STEP 1: Log the data being sent ---
@@ -196,9 +196,9 @@ export default function BookingPage() {
       await axios.post('/api/book', payload);
       setBookingSuccess(true);
       setBookingForm({
-        name:"",
-        email:"",
-         additionalInfo:""
+        name: "",
+        email: "",
+        additionalInfo: ""
 
       })
 
@@ -229,7 +229,7 @@ export default function BookingPage() {
     <BarLoader color="#3b82f6" height={3} width="100%" />
   </div></div>;
   if (!event) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><AlertCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Event Not Found</h2></div>;
-  
+
   // if (bookingSuccess) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2><p className="text-slate-600 mb-6">A confirmation email is on its way.</p><Button asChild><Link href={`/users/${username}`}>Book Another</Link></Button></div>;
 
   const timeSlots = generateTimeSlots(selectedDate);
@@ -240,8 +240,8 @@ export default function BookingPage() {
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="mb-8">
-            <Link href={`users/${username}`} className="inline-flex items-center text-slate-700 font-medium mb-4"><ArrowLeft className="w-4 h-4 mr-2" />Back to Profile</Link>
-            <h1 className="text-3xl font-bold text-slate-900">{event.title}</h1>
+            <Link href={`/users/${username}`} className="inline-flex items-center text-slate-700 font-medium mb-4"><ArrowLeft className="w-4 h-4 mr-2" />Back to Profile</Link>
+            <h1 className="text-3xl font-bold text-slate-900">{event?.title}</h1>
           </div>
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left Column: Event Summary */}
@@ -322,26 +322,26 @@ export default function BookingPage() {
                 </Card>
               )}
 
-              { (
+              {(
                 <Dialog open={bookingSuccess} onOpenChange={setBookingSuccess}>
-  <DialogContent className="sm:max-w-md w-full md:w-1/2 lg:w-1/3 h-64 bg-white p-8 border-white rounded-xl shadow-xl text-center">
-    <DialogHeader className="mb-2 ">
-      <LucideCheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4 " />
-    </DialogHeader>
+                  <DialogContent className="sm:max-w-md w-full md:w-1/2 lg:w-1/3 h-64 bg-white p-8 border-white rounded-xl shadow-xl text-center">
+                    <DialogHeader className="mb-2 ">
+                      <LucideCheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4 " />
+                    </DialogHeader>
 
-    <DialogTitle className="text-2xl font-bold text-slate-900 ">
-      Booking Confirmed!
-    </DialogTitle>
+                    <DialogTitle className="text-2xl font-bold text-slate-900 ">
+                      Booking Confirmed!
+                    </DialogTitle>
 
-    <DialogDescription className="text-slate-600 ">
-      A confirmation email is on its way.
-    </DialogDescription>
+                    <DialogDescription className="text-slate-600 ">
+                      A confirmation email is on its way.
+                    </DialogDescription>
 
-    <Button asChild className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
-    <p onClick={()=>setBookingSuccess(false)}>  Book Another</p>
-    </Button>
-  </DialogContent>
-</Dialog>
+                    <Button asChild className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
+                      <p onClick={() => setBookingSuccess(false)}>  Book Another</p>
+                    </Button>
+                  </DialogContent>
+                </Dialog>
 
               )}
             </div>
