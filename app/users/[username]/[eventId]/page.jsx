@@ -180,7 +180,7 @@ export default function BookingPage() {
     // Create the payload object that will be sent to the API
     let payload = {
       eventId,
-      date: selectedDate.toLocaleDateString('en-CA'),
+      date: selectedDate?.toLocaleDateString('en-CA'),
       time: selectedTime,
       ...bookingForm
     };
