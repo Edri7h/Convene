@@ -13,13 +13,21 @@ import { z } from 'zod';
 import axios from 'axios';
 import { toast } from 'sonner';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+
+} from "@/components/ui/dialog"
+
 // Icons and Custom UI Components
 import { Calendar, Clock, Video, ArrowLeft, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 import { BarLoader } from 'react-spinners';
 
@@ -41,7 +49,13 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [bookingForm, setBookingForm] = useState({ name: '', email: '', additionalInfo: '' });
+  const [bookingForm, setBookingForm] = useState(
+    {
+     name: '',
+     email: '', 
+     additionalInfo: '' 
+    }
+  );
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
@@ -85,7 +99,7 @@ export default function BookingPage() {
     const bookedTimes = new Set(
       (event.bookings || [])
         .map((booking) => new Date(booking.startTime))
-        .filter((bookingDate) => 
+        .filter((bookingDate) =>
           bookingDate.getFullYear() === date.getFullYear() &&
           bookingDate.getMonth() === date.getMonth() &&
           bookingDate.getDate() === date.getDate()
@@ -101,7 +115,7 @@ export default function BookingPage() {
     const end = new Date(availableDay.endTime);
     const startMinutes = start.getUTCHours() * 60 + start.getUTCMinutes();
     const endMinutes = end.getUTCHours() * 60 + end.getUTCMinutes();
-    
+
     const eventDuration = event.duration || 30;
     const bufferTime = event.user.availability.timeGap || 0;
     const totalIncrement = eventDuration + bufferTime;
@@ -113,12 +127,12 @@ export default function BookingPage() {
       const hours = Math.floor(currentTimeInMinutes / 60);
       const minutes = currentTimeInMinutes % 60;
       const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-      
+
       slots.push({
         time: timeString,
         isBooked: bookedTimes.has(timeString),
       });
-      
+
       currentTimeInMinutes += totalIncrement;
     }
 
@@ -142,71 +156,59 @@ export default function BookingPage() {
     return dates;
   }, [event]);
 
-  // Handles form submission logic
-  // const handleBooking = async () => {
-  //   if (!selectedDate || !selectedTime) {
-  //     toast.error('Please select a date and time slot.');
-  //     return;
-  //   }
-  //   const validationResult = bookingSchema.safeParse(bookingForm);
-  //   if (!validationResult.success) {
-  //     setFormErrors(validationResult.error.flatten().fieldErrors);
-  //     return;
-  //   }
-  //   setFormErrors({});
-  //   setIsSubmitting(true);
-  //   try {
-  //     await axios.post('/api/book', { eventId, date: selectedDate.toISOString().split('T')[0], time: selectedTime, ...bookingForm });
-  //     setBookingSuccess(true);
-  //   } catch (error) {
-  //     toast.error(error.response?.data?.message || 'Failed to create booking.');
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-  // In your BookingPage.jsx component
 
-const handleBooking = async () => {
-  // 1. Client-side validation (this part is unchanged)
-  if (!selectedDate || !selectedTime) {
-    toast.error('Please select a date and time slot.');
-    return;
-  }
-  const validationResult = bookingSchema.safeParse(bookingForm);
-  if (!validationResult.success) {
-    setFormErrors(validationResult.error.flatten().fieldErrors);
-    return;
-  }
-  setFormErrors({});
-  setIsSubmitting(true);
 
-  // --- DEBUGGING STEP 1: Log the data being sent ---
-  // Create the payload object that will be sent to the API
-  const payload = {
-    eventId,
-    date: selectedDate.toISOString().split('T')[0],
-    time: selectedTime,
-    ...bookingForm
+  const handleBooking = async () => {
+    // 1. Client-side validation (this part is unchanged)
+    if (!selectedDate || !selectedTime) {
+      toast.error('Please select a date and time slot.');
+      return;
+    }
+    setIsSubmitting(true);
+    const validationResult = bookingSchema.safeParse(bookingForm);
+
+    if (!validationResult.success) {
+      setFormErrors(validationResult.error.flatten().fieldErrors);
+      setIsSubmitting(true);
+      return;
+    }
+    setFormErrors({});
+
+    // --- DEBUGGING STEP 1: Log the data being sent ---
+    // Create the payload object that will be sent to the API
+    let payload = {
+      eventId,
+      date: selectedDate.toISOString().split('T')[0],
+      time: selectedTime,
+      ...bookingForm
+    };
+    // payload={...payload,...bookingForm};
+
+
+    // Log this object to the browser console to see exactly what we're sending.
+    console.log("Sending this payload to /api/book:", payload);
+
+    try {
+      // Send the request using the payload object
+      await axios.post('/api/book', payload);
+      setBookingSuccess(true);
+      setBookingForm({
+        name:"",
+        email:"",
+         additionalInfo:""
+
+      })
+
+    } catch (error) {
+      // --- DEBUGGING STEP 2: Log the detailed error from the server ---
+      // If the API returns an error, log the detailed response data.
+      console.error("Error response from /api/book:", error.response?.data);
+      toast.error(error.response?.data?.error || 'Failed to create booking.');
+
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  // Log this object to the browser console to see exactly what we're sending.
-  console.log("Sending this payload to /api/book:", payload);
-
-  try {
-    // Send the request using the payload object
-    await axios.post('/api/book', payload);
-    setBookingSuccess(true);
-
-  } catch (error) {
-    // --- DEBUGGING STEP 2: Log the detailed error from the server ---
-    // If the API returns an error, log the detailed response data.
-    console.error("Error response from /api/book:", error.response?.data);
-    toast.error(error.response?.data?.error || 'Failed to create booking.');
-
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
 
   // --- UI & STYLING ---
@@ -219,15 +221,16 @@ const handleBooking = async () => {
     .react-datepicker__day--selected { background-color: #3b82f6 !important; color: white !important; }
     .react-datepicker__day--disabled { color: #d1d5db !important; cursor: not-allowed; }
   `;
-  
+
   if (loading) return <div><div className="fixed top-0 left-0 w-full z-50">
-        <BarLoader color="#3b82f6" height={3} width="100%" />
-      </div></div>;
+    <BarLoader color="#3b82f6" height={3} width="100%" />
+  </div></div>;
   if (!event) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><AlertCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Event Not Found</h2></div>;
-  if (bookingSuccess) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2><p className="text-slate-600 mb-6">A confirmation email is on its way.</p><Button asChild><Link href={`/users/${username}`}>Book Another</Link></Button></div>;
+  
+  // if (bookingSuccess) return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-center p-4"><CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" /><h2 className="text-2xl font-bold text-slate-900 mb-2">Booking Confirmed!</h2><p className="text-slate-600 mb-6">A confirmation email is on its way.</p><Button asChild><Link href={`/users/${username}`}>Book Another</Link></Button></div>;
 
   const timeSlots = generateTimeSlots(selectedDate);
-  
+
   return (
     <>
       <style jsx global>{customDatePickerStyles}</style>
@@ -266,7 +269,7 @@ const handleBooking = async () => {
                 <CardContent className="p-8">
                   <h3 className="text-xl font-bold text-slate-900 mb-6">1. Select a Date</h3>
                   <div className="flex justify-center">
-                    <DatePicker selected={selectedDate} onChange={(date) => {setSelectedDate(date); setSelectedTime(null);}} includeDates={availableDates} minDate={new Date()} inline calendarClassName="border-0" />
+                    <DatePicker selected={selectedDate} onChange={(date) => { setSelectedDate(date); setSelectedTime(null); }} includeDates={availableDates} minDate={new Date()} inline calendarClassName="border-0" />
                   </div>
                 </CardContent>
               </Card>
@@ -282,7 +285,7 @@ const handleBooking = async () => {
                             variant='default'
                             onClick={() => !slot.isBooked && setSelectedTime(slot.time)}
                             disabled={slot.isBooked}
-                            className={`cursor-pointer ${selectedTime===slot.time ? 'bg-indigo-500 transition-transform duration-100  text-white '  :"" } py-6 text-sm font-semibold ${slot.isBooked ? 'bg-slate-100 text-slate-400 line-through cursor-not-allowed' : ''}`}
+                            className={`cursor-pointer ${selectedTime === slot.time ? 'bg-indigo-500 transition-transform duration-100  text-white ' : ""} py-6 text-sm font-semibold ${slot.isBooked ? 'bg-slate-100 text-slate-400 line-through cursor-not-allowed' : ''}`}
                           >
                             {slot.time}
                           </Button>
@@ -302,18 +305,35 @@ const handleBooking = async () => {
                     <div className="space-y-6">
                       <div>
                         <label className="block text-sm font-bold text-slate-800 mb-2">Full Name *</label>
-                        <Input value={bookingForm.name} onChange={(e) => setBookingForm({...bookingForm, name: e.target.value})} placeholder="Your full name" className={`w-full border-2 ${formErrors.name ? 'border-red-400 focus:border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-400 focus:ring-blue-100'} focus:ring-2`} />
+                        <Input value={bookingForm.name} onChange={(e) => setBookingForm({ ...bookingForm, name: e.target.value })} placeholder="Your full name" className={`w-full border-2 ${formErrors.name ? 'border-red-400 focus:border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-400 focus:ring-blue-100'} focus:ring-2`} />
                         {formErrors.name && <p className="text-red-600 text-sm mt-1 font-medium">{formErrors.name[0]}</p>}
                       </div>
                       <div>
                         <label className="block text-sm font-bold text-slate-800 mb-2">Email Address *</label>
-                        <Input type="email" value={bookingForm.email} onChange={(e) => setBookingForm({...bookingForm, email: e.target.value})} placeholder="Your email address" className={`w-full border-2 ${formErrors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-400 focus:ring-blue-100'} focus:ring-2`} />
+                        <Input type="email" value={bookingForm.email} onChange={(e) => setBookingForm({ ...bookingForm, email: e.target.value })} placeholder="Your email address" className={`w-full border-2 ${formErrors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-400 focus:ring-blue-100'} focus:ring-2`} />
                         {formErrors.email && <p className="text-red-600 text-sm mt-1 font-medium">{formErrors.email[0]}</p>}
                       </div>
-                      <Button  onClick={handleBooking} disabled={isSubmitting} size="lg" className="bg-indigo-500 border-1 border-indigo-200 text-white cursor-pointer w-full font-bold">{isSubmitting ? 'Confirming...' : `Confirm Booking`}</Button>
+                      <Button onClick={handleBooking} disabled={isSubmitting} size="lg" className="bg-indigo-500 border-1 border-indigo-200 text-white cursor-pointer w-full font-bold">{isSubmitting ? 'Confirming...' : `Confirm Booking`}</Button>
                     </div>
                   </CardContent>
                 </Card>
+              )}
+
+              { (
+                <Dialog open={bookingSuccess} onOpenChange={setBookingSuccess}>
+                  <DialogContent className="sm:max-w-md text-center">
+                    <DialogHeader>
+                      <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                      <DialogTitle>Booking Confirmed!</DialogTitle>
+                      <DialogDescription>
+                        A confirmation email is on its way.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Button asChild>
+                      <Link href={`/users/${username}`}>Book Another</Link>
+                    </Button>
+                  </DialogContent>
+                </Dialog>
               )}
             </div>
           </div>
