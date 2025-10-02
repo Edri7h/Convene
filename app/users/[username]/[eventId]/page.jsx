@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog"
 
 // Icons and Custom UI Components
-import { Calendar, Clock, Video, ArrowLeft, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, Video, ArrowLeft, AlertCircle, CheckCircle2, LucideCheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -169,27 +169,30 @@ export default function BookingPage() {
 
     if (!validationResult.success) {
       setFormErrors(validationResult.error.flatten().fieldErrors);
-      setIsSubmitting(true);
+      setIsSubmitting(false);
+      //  setTimeout(()=>{ setFormErrors({})},100000)
       return;
     }
+   
     setFormErrors({});
 
     // --- DEBUGGING STEP 1: Log the data being sent ---
     // Create the payload object that will be sent to the API
     let payload = {
       eventId,
-      date: selectedDate.toISOString().split('T')[0],
+      date: selectedDate.toLocaleDateString('en-CA'),
       time: selectedTime,
       ...bookingForm
     };
     // payload={...payload,...bookingForm};
 
 
-    // Log this object to the browser console to see exactly what we're sending.
+    //  what we're sending.
     console.log("Sending this payload to /api/book:", payload);
 
     try {
       // Send the request using the payload object
+      // console.log(payload)
       await axios.post('/api/book', payload);
       setBookingSuccess(true);
       setBookingForm({
@@ -321,19 +324,25 @@ export default function BookingPage() {
 
               { (
                 <Dialog open={bookingSuccess} onOpenChange={setBookingSuccess}>
-                  <DialogContent className="sm:max-w-md text-center">
-                    <DialogHeader>
-                      <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                      <DialogTitle>Booking Confirmed!</DialogTitle>
-                      <DialogDescription>
-                        A confirmation email is on its way.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Button asChild>
-                      <Link href={`/users/${username}`}>Book Another</Link>
-                    </Button>
-                  </DialogContent>
-                </Dialog>
+  <DialogContent className="sm:max-w-md w-full md:w-1/2 lg:w-1/3 h-64 bg-white p-8 border-white rounded-xl shadow-xl text-center">
+    <DialogHeader className="mb-2 ">
+      <LucideCheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4 " />
+    </DialogHeader>
+
+    <DialogTitle className="text-2xl font-bold text-slate-900 ">
+      Booking Confirmed!
+    </DialogTitle>
+
+    <DialogDescription className="text-slate-600 ">
+      A confirmation email is on its way.
+    </DialogDescription>
+
+    <Button asChild className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
+    <p onClick={()=>setBookingSuccess(false)}>  Book Another</p>
+    </Button>
+  </DialogContent>
+</Dialog>
+
               )}
             </div>
           </div>
