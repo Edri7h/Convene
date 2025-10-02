@@ -338,8 +338,8 @@ export default function BookingPage() {
                       A confirmation email is on its way.
                     </DialogDescription>
 
-                    <Button asChild className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
-                      <p onClick={() => setBookingSuccess(false)}>  Book Another</p>
+                    <Button onClick={() => setBookingSuccess(false)} className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
+                       Book Another
                     </Button>
                   </DialogContent>
                 </Dialog>
