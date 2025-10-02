@@ -195,6 +195,7 @@ export default function BookingPage() {
       // console.log(payload)
       await axios.post('/api/book', payload);
       setBookingSuccess(true);
+      setSelectedDate(null);
       setBookingForm({
         name: "",
         email: "",
