@@ -69,6 +69,7 @@ export default function BookingPage() {
       }
       try {
         const response = await axios.get(`/api/${username}/${eventId}`);
+        
         setEvent(response.data.data);
       } catch (error) {
         console.error('Failed to fetch event:', error);
@@ -195,7 +196,7 @@ export default function BookingPage() {
       // console.log(payload)
       await axios.post('/api/book', payload);
       setBookingSuccess(true);
-      setSelectedDate(null);
+      // setSelectedDate(null);
       setBookingForm({
         name: "",
         email: "",
@@ -338,7 +339,13 @@ export default function BookingPage() {
                       A confirmation email is on its way.
                     </DialogDescription>
 
-                    <Button onClick={() => setBookingSuccess(false)} className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
+                    <Button onClick={() =>{
+                      setBookingSuccess(false);
+                      window.location.reload()
+                      
+
+                    }
+                        } className="bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors w-full cursor-pointer">
                        Book Another
                     </Button>
                   </DialogContent>

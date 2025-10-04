@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { clerkClient } from '@clerk/nextjs/server';
 import { google } from 'googleapis';
 import { z } from 'zod';
+import { DateTime } from 'luxon';
 
 const bookingRequestSchema = z.object({
   eventId: z.string(),
@@ -37,9 +38,17 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: 'Event not found' }, { status: 404 });
     }
 
-     const startTime = new Date(`${date}T${time}:00`);
-    const endTime = new Date(startTime.getTime() + event.duration * 60000);
-    console.log("this works")
+    const startTime = DateTime.fromISO(`${date}T${time}`, { zone: 'Asia/Kolkata' });
+
+    // const startTime = new Date(`${date}T${time}:00`);
+    const endTime=startTime.plus({minutes:event.duration});
+    // const endTime = new Date(startTime.getTime() + event.duration * 60000);
+    console.log(startTime);
+    console.log(endTime);
+    console.log("this works") 
+
+    const startISO = startTime.toISO();
+    const endISO = endTime.toISO();
 
     const client = await clerkClient();
     const oauthResponse = await client.users.getUserOauthAccessToken(
@@ -47,7 +56,7 @@ export async function POST(req) {
       'oauth_google'
     );
 
-    console.log("this works2")
+    console.log("this works")
     
     const accessToken = oauthResponse.data[0]?.token;
 
@@ -70,8 +79,8 @@ export async function POST(req) {
       requestBody: {
         summary: `${event.title} with ${event.user.name}`,
         description: additionalInfo || `This meeting was booked through Convene.`,
-        start: { dateTime: startTime.toISOString(), timeZone: 'Asia/Kolkata' },
-        end: { dateTime: endTime.toISOString(), timeZone: 'Asia/Kolkata' },
+        start: { dateTime:startISO, timeZone: 'Asia/Kolkata' },
+        end: { dateTime:endISO, timeZone: 'Asia/Kolkata' },
         attendees: [{ email: email }, { email: event.user.email }],
         conferenceData: {
           createRequest: { requestId: `booking-${eventId}-${Date.now()}` },
@@ -85,8 +94,8 @@ export async function POST(req) {
         userId: event.userId,
         name,
         email,
-        startTime,
-        endTime,
+        startTime:startTime.toJSDate(),
+        endTime:endTime.toJSDate(),
         additionalInfo,
         meetLink: googleEventResponse.data.hangoutLink,
         googleEventId: googleEventResponse.data.id,
