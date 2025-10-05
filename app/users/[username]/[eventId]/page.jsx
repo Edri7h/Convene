@@ -21,7 +21,7 @@ import {
   DialogTitle,
 
 } from "@/components/ui/dialog"
-
+ import { DateTime } from "luxon";
 // Icons and Custom UI Components
 import { Calendar, Clock, Video, ArrowLeft, AlertCircle, CheckCircle2, LucideCheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -62,14 +62,17 @@ export default function BookingPage() {
 
   // Fetch event data (including bookings) when the component mounts
   useEffect(() => {
+    console.log("useEffect triggered:", username, eventId);
     const fetchEvent = async () => {
       if (!username || !eventId) {
         setLoading(false);
         return;
       }
       try {
+        console.log("fetching event now")
         const response = await axios.get(`/api/${username}/${eventId}`);
-        
+        console.log("this api response ->>>>>>>>>");
+        console.log(response.data.data);// log for checking api response
         setEvent(response.data.data);
       } catch (error) {
         console.error('Failed to fetch event:', error);
@@ -86,59 +89,61 @@ export default function BookingPage() {
    * with a flag indicating if each slot is already booked.
    * Wrapped in useCallback for performance, re-created only when `event` data changes.
    */
-  const generateTimeSlots = useCallback((date) => {
-    if (!event?.user?.availability?.days || !date) {
-      return [];
-    }
+ 
 
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
-    const availableDay = event.user.availability.days.find((d) => d.day === dayOfWeek && d.isAvailable);
-    if (!availableDay) {
-      return [];
-    }
+const generateTimeSlots = useCallback((date) => {
+  if (!event?.user?.availability?.days || !date) return [];
 
-    const bookedTimes = new Set(
-      (event.bookings || [])
-        .map((booking) => new Date(booking.startTime))
-        .filter((bookingDate) =>
-          bookingDate.getFullYear() === date.getFullYear() &&
-          bookingDate.getMonth() === date.getMonth() &&
-          bookingDate.getDate() === date.getDate()
-        )
-        .map((bookingDate) => {
-          const hours = String(bookingDate.getUTCHours()).padStart(2, '0');
-          const minutes = String(bookingDate.getUTCMinutes()).padStart(2, '0');
-          return `${hours}:${minutes}`;
-        })
-    );
+  const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
+  const availableDay = event.user.availability.days.find(d => d.day === dayOfWeek && d.isAvailable);
+  if (!availableDay) return [];
 
-    const start = new Date(availableDay.startTime);
-    const end = new Date(availableDay.endTime);
-    const startMinutes = start.getUTCHours() * 60 + start.getUTCMinutes();
-    const endMinutes = end.getUTCHours() * 60 + end.getUTCMinutes();
+  // extract hours and minutes from UTC ISO
+  const startUTC = DateTime.fromISO(availableDay.startTime, { zone: "utc" });
+  const endUTC = DateTime.fromISO(availableDay.endTime, { zone: "utc" });
 
-    const eventDuration = event.duration || 30;
-    const bufferTime = event.user.availability.timeGap || 0;
-    const totalIncrement = eventDuration + bufferTime;
+  // create start/end times for the selected date in IST
+  const start = DateTime.fromObject({
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: startUTC.hour,
+    minute: startUTC.minute
+  }, { zone: "Asia/Kolkata" });
 
-    const slots = [];
-    let currentTimeInMinutes = startMinutes;
+  const end = DateTime.fromObject({
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: endUTC.hour,
+    minute: endUTC.minute
+  }, { zone: "Asia/Kolkata" });
 
-    while (currentTimeInMinutes + eventDuration <= endMinutes) {
-      const hours = Math.floor(currentTimeInMinutes / 60);
-      const minutes = currentTimeInMinutes % 60;
-      const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  const eventDuration = event.duration || 30;
+  const bufferTime = event.user.availability.timeGap || 0;
+  const totalIncrement = eventDuration + bufferTime;
 
-      slots.push({
-        time: timeString,
-        isBooked: bookedTimes.has(timeString),
-      });
+  // map booked times to IST as before
+  const bookedTimes = new Set(
+    (event.bookings || [])
+      .map(b => DateTime.fromISO(b.startTime, { zone: "utc" }).setZone("Asia/Kolkata"))
+      .filter(b => b.hasSame(DateTime.fromJSDate(date), "day"))
+      .map(b => b.toFormat("HH:mm"))
+  );
 
-      currentTimeInMinutes += totalIncrement;
-    }
+  const slots = [];
+  let current = start;
 
-    return slots;
-  }, [event]);
+  while (current.plus({ minutes: eventDuration }) <= end) {
+    const timeString = current.toFormat("HH:mm");
+    slots.push({ time: timeString, isBooked: bookedTimes.has(timeString) });
+    current = current.plus({ minutes: totalIncrement });
+  }
+
+  return slots;
+}, [event]);
+
+
 
   // Memoized list of available Date objects for the DatePicker
   const availableDates = useMemo(() => {

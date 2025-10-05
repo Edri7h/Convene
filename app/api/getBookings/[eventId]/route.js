@@ -12,6 +12,7 @@ export async function GET(req, { params }) {
                 success: false,
                 message: "Event ID parameter is missing"
             }, { status: 400 });
+            
         }
 
         const { userId: clerkUserId } = getAuth(req);

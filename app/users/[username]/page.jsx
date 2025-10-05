@@ -30,5 +30,6 @@ export default async function PublicProfilePage({ params }) {
   return (
    
      <ProfilePage user={user}/>
+     
   );
 }
